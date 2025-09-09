@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+    <!-- Bubble -->
+    <path
+        android:fillColor="#FF128C7E"
+        android:pathData="M128,24a96,96 0,1 1,0 192a96,96 0,0 1,0 -192z"/>
+    <!-- Tail -->
+    <path
+        android:fillColor="#FF128C7E"
+        android:pathData="M100,212 L92,242 L126,222z"/>
+    <!-- Waves -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M60,120 C85,100 105,100 128,120"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M88,140 C108,125 132,125 152,140"/>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M116,160 C134,150 162,152 180,168"/>
+</vector>

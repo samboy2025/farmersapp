@@ -1,0 +1,27 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>ChatWave Logo</title>
+  <desc>Primary ChatWave logo with gradient chat bubble and wave mark</desc>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#128C7E"/>
+      <stop offset="100%" stop-color="#25D366"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0b5b52" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Bubble body -->
+  <g filter="url(#shadow)">
+    <circle cx="128" cy="120" r="96" fill="url(#grad)"/>
+    <!-- Tail -->
+    <path d="M100 212 L92 242 L126 222" fill="url(#grad)"/>
+  </g>
+
+  <!-- Wave mark -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 120 C 85 100, 105 100, 128 120"/>
+    <path d="M88 140 C 108 125, 132 125, 152 140" opacity="0.9"/>
+    <path d="M116 160 C 134 150, 162 152, 180 168" opacity="0.8"/>
+  </g>
+</svg>

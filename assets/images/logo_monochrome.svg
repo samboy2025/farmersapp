@@ -1,0 +1,13 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>ChatWave Logo Monochrome</title>
+  <desc>Monochrome ChatWave logo, inherits color via currentColor</desc>
+  <g fill="currentColor">
+    <circle cx="128" cy="120" r="96"/>
+    <path d="M100 212 L92 242 L126 222 Z"/>
+  </g>
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 120 C 85 100, 105 100, 128 120"/>
+    <path d="M88 140 C 108 125, 132 125, 152 140" opacity="0.9"/>
+    <path d="M116 160 C 134 150, 162 152, 180 168" opacity="0.8"/>
+  </g>
+</svg>
