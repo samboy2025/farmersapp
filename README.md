@@ -92,8 +92,8 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/chatwave.git
-   cd chatwave
+   git clone https://github.com/Samboy2022/chat_app2.git
+   cd chat_app2
    ```
 
 2. **Install dependencies**
@@ -290,8 +290,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/chatwave/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/chatwave/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Samboy2022/chat_app2/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Samboy2022/chat_app2/discussions)
 - **Email**: support@chatwave.com
 
 ## 🔗 Links
