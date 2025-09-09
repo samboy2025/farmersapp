@@ -303,3 +303,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Made with ❤️ using Flutter**
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/Samboy2022/chat_app2?utm_source=oss&utm_medium=github&utm_campaign=Samboy2022%2Fchat_app2&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
