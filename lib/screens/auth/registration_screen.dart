@@ -17,7 +17,6 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final PageController _pageController = PageController();
-  final NigeriaApiService _nigeriaService = NigeriaApiService();
 
   // Controllers
   final _fullNameController = TextEditingController();
@@ -27,15 +26,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   // State variables
   String? _selectedState;
-  String? _selectedLGA;
   List<String> _availableStates = [];
-  List<String> _availableLGAs = [];
   int _currentStep = 0;
   bool _isLoading = false;
   bool _isLoadingStates = true;
-  bool _isLoadingLGAs = false;
   bool _acceptedTerms = false;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -56,58 +51,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _loadStates() async {
     setState(() {
       _isLoadingStates = true;
-      _errorMessage = null;
     });
 
-    try {
-      final states = await _nigeriaService.getStates();
-      setState(() {
-        _availableStates = states;
-        _isLoadingStates = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to load states. Please try again.';
-        _isLoadingStates = false;
-        // Use fallback states
-        _availableStates = _nigeriaService.getFallbackStates();
-      });
-    }
-  }
+    // Simulate loading delay for better UX
+    await Future.delayed(const Duration(milliseconds: 300));
 
-  Future<void> _loadLGAs(String state) async {
     setState(() {
-      _isLoadingLGAs = true;
-      _availableLGAs = [];
-      _errorMessage = null;
+      _availableStates = NigeriaStates.getAll();
+      _isLoadingStates = false;
     });
-
-    try {
-      final lgas = await _nigeriaService.getLGAs(state);
-      setState(() {
-        _availableLGAs = lgas;
-        _isLoadingLGAs = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to load LGAs. Please try again.';
-        _isLoadingLGAs = false;
-        // Use fallback LGAs
-        _availableLGAs = _nigeriaService.getFallbackLGAs(state);
-      });
-    }
   }
+
 
   void _onStateChanged(String? state) {
     setState(() {
       _selectedState = state;
-      _selectedLGA = null;
-      _availableLGAs = [];
     });
-
-    if (state != null) {
-      _loadLGAs(state);
-    }
   }
 
   void _nextStep() {
@@ -143,7 +102,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       case 0:
         return _validatePersonalInfo();
       case 1:
-        return _validateLocationInfo();
+        return _validateStateInfo();
       case 2:
         return _validateSecurityInfo();
       default:
@@ -167,13 +126,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return true;
   }
 
-  bool _validateLocationInfo() {
+  bool _validateStateInfo() {
     if (_selectedState == null) {
       _showError('Please select your state');
-      return false;
-    }
-    if (_selectedLGA == null) {
-      _showError('Please select your local government area');
       return false;
     }
     return true;
@@ -199,56 +154,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return true;
   }
 
-  Future<void> _refreshNigeriaData() async {
-    setState(() {
-      _isLoadingStates = true;
-      _availableStates = [];
-      _availableLGAs = [];
-      _selectedState = null;
-      _selectedLGA = null;
-      _errorMessage = null;
-    });
-
-    try {
-      await _nigeriaService.refreshData();
-
-      // Reload the data
-      final states = await _nigeriaService.getStates();
-      setState(() {
-        _availableStates = states;
-        _isLoadingStates = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Data refreshed successfully!'),
-          backgroundColor: AppConfig.successColor,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _isLoadingStates = false;
-        _errorMessage = 'Failed to refresh data. Please try again.';
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Failed to refresh data. Using cached data if available.'),
-          backgroundColor: AppConfig.errorColor,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-    }
-  }
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -317,24 +222,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               // Progress indicator
               _buildProgressIndicator(isTablet),
 
-              // Refresh data button (only show when states are loaded)
-              if (_availableStates.isNotEmpty) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton.icon(
-                      onPressed: _refreshNigeriaData,
-                      icon: const Icon(Icons.refresh, size: 16),
-                      label: const Text('Refresh Data'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppConfig.primaryColor,
-                        textStyle: TextStyle(fontSize: isTablet ? 14 : 12),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: isTablet ? 16 : 12),
-              ],
 
               SizedBox(height: isTablet ? 32 : 24),
               
@@ -345,7 +232,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildPersonalInfoStep(isTablet),
-                    _buildLocationStep(isTablet),
+                    _buildStateStep(isTablet),
                     _buildSecurityStep(isTablet),
                   ],
                 ),
@@ -441,41 +328,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _buildLocationStep(bool isTablet) {
+  Widget _buildStateStep(bool isTablet) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AuthHeader(
-            title: 'Location Details',
-            subtitle: 'Help us know where you are located',
+            title: 'State Information',
+            subtitle: 'Select your state of residence',
             showLogo: false,
             isTablet: isTablet,
           ),
-          
+
           SizedBox(height: isTablet ? 40 : 32),
-          
+
           if (_isLoadingStates)
             const Center(child: CircularProgressIndicator())
-          else if (_errorMessage != null && _availableStates.isEmpty)
-            Column(
-              children: [
-                Text(
-                  _errorMessage!,
-                  style: TextStyle(color: AppConfig.errorColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                AuthButton(
-                  text: 'Retry',
-                  onPressed: _loadStates,
-                  isTablet: isTablet,
-                ),
-              ],
-            )
           else
             AuthDropdown(
-              label: 'State',
+              label: 'State of Residence',
               hint: 'Select your state',
               items: _availableStates,
               value: _selectedState,
@@ -485,66 +356,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please select your state';
-                }
-                return null;
-              },
-            ),
-          
-          SizedBox(height: isTablet ? 24 : 20),
-          
-          if (_selectedState == null)
-            AuthDropdown(
-              label: 'Local Government Area (LGA)',
-              hint: 'Please select a state first',
-              items: const [],
-              value: null,
-              onChanged: (_) {},
-              prefixIcon: Icons.location_city_outlined,
-              isTablet: isTablet,
-              validator: (value) {
-                if (_selectedState == null) {
-                  return 'Please select your state first';
-                }
-                if (value == null || value.isEmpty) {
-                  return 'Please select your LGA';
-                }
-                return null;
-              },
-            )
-          else if (_isLoadingLGAs)
-            const Center(child: CircularProgressIndicator())
-          else if (_availableLGAs.isEmpty)
-            Column(
-              children: [
-                Text(
-                  'No LGAs available for $_selectedState',
-                  style: TextStyle(color: AppConfig.errorColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                AuthButton(
-                  text: 'Retry',
-                  onPressed: () => _loadLGAs(_selectedState!),
-                  isTablet: isTablet,
-                ),
-              ],
-            )
-          else
-            AuthDropdown(
-              label: 'Local Government Area (LGA)',
-              hint: 'Select your LGA',
-              items: _availableLGAs,
-              value: _selectedLGA,
-              onChanged: (value) {
-                setState(() {
-                  _selectedLGA = value;
-                });
-              },
-              prefixIcon: Icons.location_city_outlined,
-              isTablet: isTablet,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please select your LGA';
                 }
                 return null;
               },

@@ -6,6 +6,7 @@ import '../../widgets/auth/auth_button.dart';
 import '../../widgets/auth/auth_header.dart';
 import 'otp_login_screen.dart';
 import 'forgot_password_screen.dart';
+import 'registration_screen.dart';
 
 class PasswordLoginScreen extends StatefulWidget {
   const PasswordLoginScreen({super.key});
@@ -162,32 +163,69 @@ class _PasswordLoginScreenState extends State<PasswordLoginScreen> {
 
                     SizedBox(height: isTablet ? 32 : 24),
 
-                    // Login Method Switch
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    // Alternative Login Methods
+                    Column(
                       children: [
-                        Text(
-                          'Want to use OTP? ',
-                          style: TextStyle(
-                            fontSize: isTablet ? 16 : 14,
-                            color: isDark ? AppConfig.darkTextSecondary : const Color(0xFF667781),
-                          ),
+                        // OTP Login Option
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Want to use OTP? ',
+                              style: TextStyle(
+                                fontSize: isTablet ? 16 : 14,
+                                color: isDark ? AppConfig.darkTextSecondary : const Color(0xFF667781),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OtpLoginScreen(),
+                                ),
+                              ),
+                              child: Text(
+                                'Login with OTP',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 16 : 14,
+                                  color: AppConfig.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        GestureDetector(
-                          onTap: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OtpLoginScreen(),
+
+                        SizedBox(height: isTablet ? 16 : 12),
+
+                        // Registration Link
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Don\'t have an account? ',
+                              style: TextStyle(
+                                fontSize: isTablet ? 16 : 14,
+                                color: isDark ? AppConfig.darkTextSecondary : const Color(0xFF667781),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Login with OTP',
-                            style: TextStyle(
-                              fontSize: isTablet ? 16 : 14,
-                              color: AppConfig.primaryColor,
-                              fontWeight: FontWeight.w600,
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RegistrationScreen(),
+                                ),
+                              ),
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 16 : 14,
+                                  color: AppConfig.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
