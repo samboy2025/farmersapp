@@ -4,7 +4,7 @@ import '../../../config/app_config.dart';
 import '../../../models/message.dart';
 import '../../../services/media_picker_service.dart';
 import 'attachment_modal_bottom_sheet.dart';
-import 'audio_recorder_overlay.dart';
+import 'voice_note_recorder.dart';
 import 'emoji_picker.dart';
 
 class ChatInputToolbar extends StatefulWidget {
@@ -116,7 +116,7 @@ class _ChatInputToolbarState extends State<ChatInputToolbar> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 4,
                     offset: const Offset(0, 1),
                   ),
@@ -175,7 +175,7 @@ class _ChatInputToolbarState extends State<ChatInputToolbar> {
                         setState(() {
                           _isRecording = true;
                         });
-                        _showAudioRecorderOverlay();
+                        _showVoiceNoteRecorder();
                       },
                       onLongPressEnd: (_) {
                         setState(() {
@@ -301,7 +301,7 @@ class _ChatInputToolbarState extends State<ChatInputToolbar> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: AppConfig.primaryColor.withOpacity(0.1),
+              color: AppConfig.primaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -391,36 +391,34 @@ class _ChatInputToolbarState extends State<ChatInputToolbar> {
     );
   }
 
-  void _showAudioRecorderOverlay() {
-    showDialog(
+  void _showVoiceNoteRecorder() {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
-      builder: (context) => AudioRecorderOverlay(
-        onRecordingComplete: (filePath) {
-          Navigator.pop(context);
-          if (filePath != null) {
-            // Send voice message
-            widget.onSendMediaMessage(
-              MessageType.voiceMessage,
-              filePath,
-              'voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a',
-            );
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => VoiceNoteRecorder(
+        onRecordingComplete: (filePath, duration) {
+          // Send voice message
+          widget.onSendMediaMessage(
+            MessageType.voice,
+            filePath,
+            'voice_message_${DateTime.now().millisecondsSinceEpoch}.m4a',
+          );
 
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Voice message sent successfully'),
-                backgroundColor: AppConfig.successColor,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                margin: const EdgeInsets.all(16),
+            SnackBar(
+              content: const Text('Voice message sent successfully'),
+              backgroundColor: AppConfig.successColor,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-            );
-          }
+              margin: const EdgeInsets.all(16),
+            ),
+          );
         },
         onRecordingCancelled: () {
-          Navigator.pop(context);
+          // Recording was cancelled, no action needed
         },
       ),
     );

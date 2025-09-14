@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'user.dart';
+import '../services/mock_data_service.dart';
 
 enum MessageType {
   text,
@@ -8,7 +9,7 @@ enum MessageType {
   file,
   contact,
   location,
-  voiceMessage,
+  voice,
 }
 
 enum MessageStatus {
@@ -38,7 +39,9 @@ class Message extends Equatable {
   final bool isReply;
   final Message? replyTo;
   final List<String>? mentions;
-  final Map<String, List<String>>? reactions; // emoji -> list of user IDs
+  final   Map<String, List<String>>? reactions; // emoji -> list of user IDs
+
+  bool get isSentByCurrentUser => sender.id == MockDataService.currentUser.id;
 
   const Message({
     required this.id,

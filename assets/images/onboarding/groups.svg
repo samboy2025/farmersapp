@@ -1,0 +1,12 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="80" fill="#F3E5F5"/>
+  <circle cx="75" cy="75" r="20" fill="#9C27B0"/>
+  <circle cx="125" cy="75" r="20" fill="#9C27B0"/>
+  <circle cx="100" cy="110" r="20" fill="#9C27B0"/>
+  <circle cx="75" cy="75" r="12" fill="white"/>
+  <circle cx="125" cy="75" r="12" fill="white"/>
+  <circle cx="100" cy="110" r="12" fill="white"/>
+  <text x="75" y="82" text-anchor="middle" fill="#9C27B0" font-family="Arial" font-size="14" font-weight="bold">A</text>
+  <text x="125" y="82" text-anchor="middle" fill="#9C27B0" font-family="Arial" font-size="14" font-weight="bold">B</text>
+  <text x="100" y="117" text-anchor="middle" fill="#9C27B0" font-family="Arial" font-size="14" font-weight="bold">C</text>
+</svg>

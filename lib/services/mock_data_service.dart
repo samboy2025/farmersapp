@@ -1408,4 +1408,43 @@ class MockDataService {
 
   // Get all groups
   static List<Group> get groups => _mockGroups;
+
+  // Contact management methods
+  static List<User> getContacts() {
+    // Return all users except current user as contacts
+    return _mockUsers.where((user) => user.id != currentUser.id).toList();
+  }
+
+  static void addContact(User contact) {
+    _mockUsers.add(contact);
+  }
+
+  static Chat? getChatWithContact(String contactId) {
+    try {
+      return _mockChats.firstWhere(
+        (chat) => chat.participants.any((user) => user.id == contactId) && !chat.isGroup,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Chat createChatWithContact(User contact) {
+    final now = DateTime.now();
+    final newChat = Chat(
+      id: 'chat_${now.millisecondsSinceEpoch}',
+      name: contact.name,
+      participants: [currentUser, contact],
+      lastActivity: now,
+      unreadCount: 0,
+      isMuted: false,
+      isPinned: false,
+      isGroup: false,
+      lastMessage: null,
+      createdAt: now,
+    );
+
+    _mockChats.add(newChat);
+    return newChat;
+  }
 }

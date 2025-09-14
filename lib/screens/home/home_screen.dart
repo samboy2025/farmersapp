@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/chat/chat_bloc.dart';
 import '../../config/app_config.dart';
+import '../../utils/animation_utils.dart';
 import '../../models/call.dart';
 import '../../models/user.dart';
 import '../../services/mock_data_service.dart';
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: isDark ? AppConfig.darkSurface : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -183,20 +184,24 @@ class _HomeScreenState extends State<HomeScreen> {
     // Show FAB for different screens
     switch (_currentIndex) {
       case 0: // Chats
-        return FloatingActionButton(
-              onPressed: _showNewChatOptions,
-              backgroundColor: AppConfig.primaryColor,
-          child: const Icon(Icons.message, color: Colors.white, size: 24),
-        );
+        return null; // Chats screen has its own FAB now
       case 1: // Updates/Status
         return null; // Status screen has its own FAB
       case 2: // Groups/Communities
         return null; // Groups screen has its own FAB
       case 3: // Calls
-        return FloatingActionButton(
-          onPressed: _showNewCallOptions,
-          backgroundColor: AppConfig.primaryColor,
-          child: const Icon(Icons.add_call, color: Colors.white, size: 24),
+        return ScaleAnimation(
+          beginScale: 0.8,
+          endScale: 1.1,
+          duration: AnimationDurations.quick,
+          curve: AppAnimationCurves.microBounce,
+          onTap: _showNewCallOptions,
+          child: FloatingActionButton(
+            onPressed: _showNewCallOptions,
+            backgroundColor: AppConfig.primaryColor,
+            elevation: 6,
+            child: const Icon(Icons.add_call, color: Colors.white, size: 24),
+          ),
         );
       default:
         return null;
@@ -231,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppConfig.primaryColor.withOpacity(0.1),
+                  color: AppConfig.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -250,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppConfig.primaryColor.withOpacity(0.1),
+                  color: AppConfig.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -269,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppConfig.primaryColor.withOpacity(0.1),
+                  color: AppConfig.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -323,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppConfig.primaryColor.withOpacity(0.1),
+                  color: AppConfig.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -342,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppConfig.primaryColor.withOpacity(0.1),
+                  color: AppConfig.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

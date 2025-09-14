@@ -12,6 +12,7 @@ import 'blocs/profile/profile_bloc.dart';
 import 'blocs/status/status_bloc.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
+import 'screens/home/home_screen.dart';
 import 'screens/chat/chat_screen.dart';
 import 'screens/call/call_screen.dart';
 
@@ -25,6 +26,7 @@ import 'screens/auth/registration_screen.dart';
 import 'screens/contact/new_contact_screen.dart';
 import 'screens/broadcast/new_broadcast_screen.dart';
 import 'screens/devices/linked_devices_screen.dart';
+import 'screens/home/select_contact_screen.dart';
 import 'models/chat.dart';
 import 'models/user.dart';
 import 'models/call.dart';
@@ -81,6 +83,7 @@ class ChatWaveApp extends StatelessWidget {
         routes: {
           '/splash': (context) => const SplashScreen(),
           '/onboarding': (context) => const OnboardingScreen(),
+          '/home': (context) => const HomeScreen(),
           '/chat': (context) {
             final arguments = ModalRoute.of(context)?.settings.arguments;
             if (arguments is Chat) {
@@ -185,6 +188,7 @@ class ChatWaveApp extends StatelessWidget {
               );
             }
           },
+          '/select-contact': (context) => const SelectContactScreen(),
           '/new-contact': (context) => const NewContactScreen(),
           '/new-broadcast': (context) => const NewBroadcastScreen(),
           '/linked-devices': (context) => const LinkedDevicesScreen(),

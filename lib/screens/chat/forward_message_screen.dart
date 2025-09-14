@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/chat/chat_bloc.dart' as chat_bloc;
 import '../../config/app_config.dart';
-import '../../models/chat.dart';
 import '../../models/message.dart';
-import '../../services/mock_data_service.dart';
 
 class ForwardMessageScreen extends StatefulWidget {
   final Message messageToForward;
@@ -211,7 +209,7 @@ class _ForwardMessageScreenState extends State<ForwardMessageScreen> {
             Text(widget.messageToForward.fileName ?? 'File'),
           ],
         );
-      case MessageType.voiceMessage:
+      case MessageType.voice:
         return Row(
           children: [
             Icon(Icons.mic, color: AppConfig.primaryColor),

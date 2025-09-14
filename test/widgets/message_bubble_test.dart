@@ -143,7 +143,7 @@ void main() {
         id: 'msg_5',
         chatId: 'chat_123',
         sender: testUser,
-        type: MessageType.voiceMessage,
+        type: MessageType.voice,
         content: 'Voice message',
         voiceDuration: Duration(seconds: 30),
         timestamp: DateTime.now(),

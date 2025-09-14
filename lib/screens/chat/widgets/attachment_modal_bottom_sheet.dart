@@ -15,15 +15,18 @@ class AttachmentModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.width > 600;
+
     return Container(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width,
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
+        maxHeight: MediaQuery.of(context).size.height * 0.4,
       ),
-      padding: const EdgeInsets.all(AppConfig.padding),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppConfig.darkSurface
+            : Colors.white,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -33,64 +36,61 @@ class AttachmentModalBottomSheet extends StatelessWidget {
         children: [
           // Handle bar
           Container(
-            width: 40,
+            margin: const EdgeInsets.only(top: 8),
+            width: 32,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: Colors.grey.shade400,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 20),
-          
-          // Title
-          Text(
-            'Share',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 20),
-          
-          // Attachment options grid
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width,
-              maxHeight: MediaQuery.of(context).size.height * 0.5,
+
+          // Compact grid of attachment options
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 32 : 24,
+              vertical: isTablet ? 20 : 16,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-              _buildAttachmentOption(
-                context,
-                icon: Icons.photo,
-                label: 'Gallery',
-                color: Colors.green,
+                _buildCompactOption(
+                  context,
+                  icon: Icons.photo_library,
+                  label: 'Gallery',
+                  color: Colors.green,
                   onTap: () => _selectImage(context, img_picker.ImageSource.gallery),
-              ),
-              _buildAttachmentOption(
-                context,
-                icon: Icons.camera_alt,
-                label: 'Camera',
-                color: Colors.blue,
+                ),
+                _buildCompactOption(
+                  context,
+                  icon: Icons.camera_alt,
+                  label: 'Camera',
+                  color: Colors.blue,
                   onTap: () => _selectImage(context, img_picker.ImageSource.camera),
-              ),
-              _buildAttachmentOption(
-                context,
-                icon: Icons.attach_file,
-                label: 'Document',
-                color: Colors.orange,
-                onTap: () => _selectDocument(context),
-              ),
-            ],
+                ),
+                _buildCompactOption(
+                  context,
+                  icon: Icons.insert_drive_file,
+                  label: 'Document',
+                  color: Colors.orange,
+                  onTap: () => _selectDocument(context),
+                ),
+                _buildCompactOption(
+                  context,
+                  icon: Icons.location_on,
+                  label: 'Location',
+                  color: Colors.red,
+                  onTap: () => _shareLocation(context),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _buildAttachmentOption(
+  Widget _buildCompactOption(
     BuildContext context, {
     required IconData icon,
     required String label,
@@ -102,33 +102,42 @@ class AttachmentModalBottomSheet extends StatelessWidget {
         Navigator.pop(context);
         onTap();
       },
-      borderRadius: BorderRadius.circular(AppConfig.borderRadius),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppConfig.borderRadius),
-              border: Border.all(color: color.withValues(alpha: 0.3)),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 60,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 24,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 32,
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white70
+                    : Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -143,14 +152,14 @@ class AttachmentModalBottomSheet extends StatelessWidget {
       final pickedFile = await mediaPicker.pickImage(mediaSource);
 
       if (pickedFile != null) {
-    onAttachmentSelected(
-      MessageType.image,
+        onAttachmentSelected(
+          MessageType.image,
           pickedFile.path,
           pickedFile.path.split('/').last,
-    );
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: const Text('Image selected successfully'),
             backgroundColor: AppConfig.successColor,
             behavior: SnackBarBehavior.floating,
@@ -158,11 +167,11 @@ class AttachmentModalBottomSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
+          ),
+        );
+      }
     } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to select image: $e'),
           backgroundColor: AppConfig.errorColor,
@@ -176,7 +185,6 @@ class AttachmentModalBottomSheet extends StatelessWidget {
     }
   }
 
-
   Future<void> _selectDocument(BuildContext context) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -187,13 +195,13 @@ class AttachmentModalBottomSheet extends StatelessWidget {
       if (result != null) {
         final file = result.files.first;
 
-    onAttachmentSelected(
+        onAttachmentSelected(
           MessageType.file,
           file.path ?? '',
           file.name,
-    );
-    
-    ScaffoldMessenger.of(context).showSnackBar(
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Document "${file.name}" selected successfully'),
             backgroundColor: AppConfig.successColor,
@@ -215,11 +223,24 @@ class AttachmentModalBottomSheet extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
+  }
+
+  void _shareLocation(BuildContext context) {
+    // For now, just show a placeholder message
+    // In a real app, this would open location picker
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Location sharing coming soon!'),
+        backgroundColor: Colors.blue,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: const EdgeInsets.all(16),
       ),
     );
   }
 }
-
-}
-
-

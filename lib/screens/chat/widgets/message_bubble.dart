@@ -4,6 +4,7 @@ import '../../../models/message.dart';
 import '../../../services/mock_data_service.dart';
 import '../media_viewer_screen.dart';
 import 'reaction_picker.dart';
+import 'voice_note_player.dart';
 
 class MessageBubble extends StatelessWidget {
   final Message message;
@@ -170,7 +171,7 @@ class MessageBubble extends StatelessWidget {
         return _buildContactMessage();
       case MessageType.location:
         return _buildLocationMessage();
-      case MessageType.voiceMessage:
+      case MessageType.voice:
         return _buildVoiceMessage();
     }
   }
@@ -428,40 +429,11 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildVoiceMessage() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.play_arrow),
-          onPressed: () {
-            // Implement voice message playback
-          },
-          color: AppConfig.primaryColor,
-        ),
-        Container(
-          width: 100,
-          height: 20,
-          decoration: BoxDecoration(
-            color: Colors.grey.shade300,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const LinearProgressIndicator(
-            value: 0.0,
-            backgroundColor: Colors.transparent,
-            valueColor: AlwaysStoppedAnimation<Color>(AppConfig.primaryColor),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          message.voiceDuration != null
-              ? '${message.voiceDuration!.inSeconds}s'
-              : '0s',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ],
+    final isCurrentUser = message.sender.id == MockDataService.currentUser.id;
+    return VoiceNotePlayer(
+      filePath: message.content,
+      duration: message.voiceDuration ?? Duration.zero,
+      isFromMe: isCurrentUser,
     );
   }
 

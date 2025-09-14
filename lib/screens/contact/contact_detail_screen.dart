@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../config/app_config.dart';
 import '../../models/user.dart';
+import '../../models/call.dart';
 import '../../services/mock_data_service.dart';
 import 'contact_qr_screen.dart';
 import '../search/search_screen.dart';
@@ -373,10 +374,24 @@ class ContactDetailScreen extends StatelessWidget {
   void _makeCall(BuildContext context, bool isVideo) {
     // Navigate to call screen
     Navigator.pop(context);
-    // In a real app, this would navigate to the call screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Initiating ${isVideo ? 'video' : 'voice'} call...')),
+
+    // Create a call object for navigation
+    final call = Call(
+      id: 'call_${DateTime.now().millisecondsSinceEpoch}',
+      callerId: MockDataService.currentUser.id,
+      receiverId: contact.id,
+      type: isVideo ? CallType.video : CallType.voice,
+      status: CallStatus.initial,
+      startTime: DateTime.now(),
+      isIncoming: false,
     );
+
+    Navigator.pushNamed(context, '/call', arguments: {
+      'call': call,
+      'receiver': contact,
+      'isVideo': isVideo,
+      'isIncoming': false,
+    });
   }
 
   void _searchInChat(BuildContext context) {

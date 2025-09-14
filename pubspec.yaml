@@ -45,8 +45,10 @@ dependencies:
   
   # Media & File handling
   image_picker: ^1.0.7
+  flutter_image_compress: ^2.3.0
   file_picker: ^10.3.2
   record: ^6.1.0
+  audioplayers: ^6.1.0
   
   # File handling & sharing
   path_provider: ^2.1.2
@@ -92,6 +94,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/icons/
+    - assets/images/onboarding/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

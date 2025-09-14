@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/chat/chat_bloc.dart';
 import '../../config/app_config.dart';
 import '../../models/group.dart';
 import '../../models/message.dart';
-import '../../models/user.dart';
 import '../../services/mock_data_service.dart';
 import 'widgets/chat_input_toolbar.dart';
 import 'widgets/message_bubble.dart';
@@ -362,56 +359,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     );
   }
 
-  void _attachFile() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('File attachment coming soon!')),
-    );
-  }
-
-  void _attachImage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Image attachment coming soon!')),
-    );
-  }
-
-  void _attachCamera() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Camera attachment coming soon!')),
-    );
-  }
-
-  void _attachLocation() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LocationSharingScreen(
-          onLocationSelected: _sendLocation,
-        ),
-      ),
-    );
-  }
-
-  void _attachContact() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ContactSharingScreen(
-          onContactSelected: _sendContact,
-        ),
-      ),
-    );
-  }
-
-  void _startVoiceMessage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VoiceMessageRecorder(
-          onRecordingComplete: _sendVoiceMessage,
-        ),
-      ),
-    );
-  }
 
   void _searchMessages() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -493,7 +440,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       chatId: widget.group.id,
       sender: MockDataService.currentUser,
-      type: MessageType.voiceMessage,
+      type: MessageType.voice,
       content: content,
       timestamp: DateTime.now(),
       fileName: title,

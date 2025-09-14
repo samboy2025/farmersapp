@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../config/app_config.dart';
+import '../../utils/animation_utils.dart';
 import '../auth/login_screen.dart';
+import '../home/home_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,25 +20,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingData(
       title: 'Welcome to ChatWave',
       description: 'Connect with friends and family through secure messaging, voice calls, and video chats.',
-      image: 'assets/images/onboarding_1.svg',
+      image: 'assets/images/onboarding/welcome.svg',
       icon: Icons.waving_hand,
     ),
     OnboardingData(
       title: 'Stay Connected',
       description: 'Share photos, videos, documents and your current location with end-to-end encryption.',
-      image: 'assets/images/onboarding_2.svg',
+      image: 'assets/images/onboarding/connected.svg',
       icon: Icons.connect_without_contact,
     ),
     OnboardingData(
       title: 'Group Conversations',
       description: 'Create groups to chat with multiple people and stay connected with communities.',
-      image: 'assets/images/onboarding_3.svg',
+      image: 'assets/images/onboarding/groups.svg',
       icon: Icons.groups,
     ),
     OnboardingData(
       title: 'Voice & Video Calls',
       description: 'Make crystal clear voice and video calls to anyone, anywhere in the world.',
-      image: 'assets/images/onboarding_4.svg',
+      image: 'assets/images/onboarding/calls.svg',
       icon: Icons.videocam,
     ),
   ];
@@ -67,13 +70,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _completeOnboarding() {
+    // For demo mode, go directly to home screen with smooth animation
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      SmoothPageRoute(
+        page: const HomeScreen(),
+        beginOffset: const Offset(0, 1),
+        curve: AppAnimationCurves.pageEnter,
+      ),
     );
   }
 
   void _skipOnboarding() {
     _completeOnboarding();
+  }
+
+  Future<bool> _checkSvgExists(String assetPath) async {
+    try {
+      await DefaultAssetBundle.of(context).loadString(assetPath);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Widget _buildFallbackIcon(OnboardingData data, bool isTablet) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppConfig.primaryColor.withOpacity(0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        data.icon,
+        size: isTablet ? 60 : 48,
+        color: AppConfig.primaryColor,
+      ),
+    );
   }
 
   @override
@@ -185,14 +216,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Container(
               width: isTablet ? 200 : 160,
               height: isTablet ? 200 : 160,
-              decoration: BoxDecoration(
-                color: AppConfig.primaryColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                data.icon,
-                size: isTablet ? 80 : 64,
-                color: AppConfig.primaryColor,
+              child: FutureBuilder<bool>(
+                future: _checkSvgExists(data.image),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.data == true) {
+                    return SvgPicture.asset(
+                      data.image,
+                      width: isTablet ? 120 : 100,
+                      height: isTablet ? 120 : 100,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildFallbackIcon(data, isTablet);
+                      },
+                    );
+                  } else {
+                    return _buildFallbackIcon(data, isTablet);
+                  }
+                },
               ),
             ),
             

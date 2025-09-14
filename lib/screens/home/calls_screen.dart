@@ -805,7 +805,8 @@ class _CallsScreenState extends State<CallsScreen> {
 
   void _selectContactForCall(CallType callType) {
     Navigator.pop(context);
-    Navigator.pushNamed(context, '/new-contact');
+    Navigator.pushNamed(context, '/contacts');
+    // TODO: Pass call type to contacts screen and allow contact selection for calling
   }
 
   void _showCallOptions(BuildContext context) {

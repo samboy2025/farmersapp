@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/chat/chat_bloc.dart';
 import '../../config/app_config.dart';
+import '../../utils/animation_utils.dart';
 import '../../models/chat.dart';
 import '../../models/message.dart';
 import '../chat/chat_screen.dart';
@@ -9,6 +10,15 @@ import '../../widgets/chat_app_bar.dart';
 
 class ChatsListScreen extends StatelessWidget {
   const ChatsListScreen({super.key});
+
+  Future<void> _onRefresh() async {
+    // Simulate refresh delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    // In a real app, this would trigger a refresh of chat data
+    // For demo purposes, just show a brief feedback
+    // You could dispatch a refresh event to the ChatBloc here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +29,20 @@ class ChatsListScreen extends StatelessWidget {
       backgroundColor: isDark ? AppConfig.darkBackground : AppConfig.lightBackground,
       appBar: const ChatAppBar(
         title: 'ChatWave',
+      ),
+      floatingActionButton: ScaleAnimation(
+        beginScale: 0.8,
+        endScale: 1.1,
+        duration: AnimationDurations.quick,
+        curve: AppAnimationCurves.microBounce,
+        onTap: () => Navigator.pushNamed(context, '/select-contact'),
+        child: FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, '/select-contact'),
+          backgroundColor: AppConfig.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 6,
+          child: const Icon(Icons.chat_bubble_outline, size: 28),
+        ),
       ),
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
@@ -51,24 +75,32 @@ class ChatsListScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return ListView(
-      padding: const EdgeInsets.only(bottom: 80, top: 8),
-      children: sortedChats.asMap().entries.map((entry) {
-        final index = entry.key;
-        final chat = entry.value;
-        return Column(
-          children: [
-            _WhatsAppChatTile(chat: chat),
-            if (index < sortedChats.length - 1)
-              Divider(
-                height: 1,
-                thickness: 0,
-                indent: 74,
-                color: isDark ? Colors.grey.shade700 : const Color(0xFFE8E8E8),
-              ),
-          ],
-        );
-      }).toList(),
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      color: AppConfig.primaryColor,
+      backgroundColor: isDark ? AppConfig.darkSurface : Colors.white,
+      displacement: 20,
+      strokeWidth: 3,
+      child: ListView(
+        padding: const EdgeInsets.only(bottom: 80, top: 8),
+        physics: const BouncingScrollPhysics(), // Add bounce physics
+        children: sortedChats.asMap().entries.map((entry) {
+          final index = entry.key;
+          final chat = entry.value;
+          return Column(
+            children: [
+              _WhatsAppChatTile(chat: chat),
+              if (index < sortedChats.length - 1)
+                Divider(
+                  height: 1,
+                  thickness: 0,
+                  indent: 74,
+                  color: isDark ? Colors.grey.shade700 : const Color(0xFFE8E8E8),
+                ),
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -124,7 +156,7 @@ class ChatsListScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-                color: isDark ? Colors.red.shade900.withOpacity(0.3) : Colors.red.shade50,
+                color: isDark ? Colors.red.shade900.withValues(alpha: 0.3) : Colors.red.shade50,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -494,26 +526,6 @@ class _WhatsAppChatTileState extends State<_WhatsAppChatTile> {
     }
   }
 
-  Widget _buildDefaultAvatar(IconData icon, String name, {required bool isGroup}) {
-    // Generate consistent color based on name
-    final colorIndex = name.codeUnits.fold(0, (sum, unit) => sum + unit) % _avatarColors.length;
-    final color = _avatarColors[colorIndex];
-    
-      return CircleAvatar(
-        radius: 24,
-      backgroundColor: color,
-      child: isGroup
-          ? Icon(icon, color: Colors.white, size: 24)
-          : Text(
-              name.isNotEmpty ? name[0].toUpperCase() : '?',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-        ),
-      );
-    }
 
   // WhatsApp-like avatar colors
   static const List<Color> _avatarColors = [
@@ -544,7 +556,7 @@ class _WhatsAppChatTileState extends State<_WhatsAppChatTile> {
         return '👤 Contact';
       case MessageType.location:
         return '📍 Location';
-      case MessageType.voiceMessage:
+      case MessageType.voice:
         return '🎤 Voice message';
     }
   }

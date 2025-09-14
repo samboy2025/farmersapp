@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../config/app_config.dart';
+import '../../models/user.dart';
+import '../../models/call.dart';
+import '../../services/mock_data_service.dart';
 import '../../widgets/standard_app_bar.dart';
 
 class ContactsScreen extends StatelessWidget {
@@ -148,9 +151,7 @@ class ContactsScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.call),
-            onPressed: () {
-              // Initiate call with this contact
-            },
+            onPressed: () => _makeCall(context, contact, false),
           ),
         ],
       ),
@@ -190,5 +191,36 @@ class ContactsScreen extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Contacts refreshed successfully!')),
     );
+  }
+
+  void _makeCall(BuildContext context, Map<String, String> contact, bool isVideo) {
+    // Create a mock User object from contact data
+    final receiver = User(
+      id: 'contact_${contact['phone']}', // Use phone as unique ID
+      name: contact['name']!,
+      phoneNumber: contact['phone']!,
+      profilePicture: null,
+      about: null,
+      isOnline: true,
+      lastSeen: DateTime.now(),
+    );
+
+    // Create a call object for navigation
+    final call = Call(
+      id: 'call_${DateTime.now().millisecondsSinceEpoch}',
+      callerId: MockDataService.currentUser.id,
+      receiverId: receiver.id,
+      type: isVideo ? CallType.video : CallType.voice,
+      status: CallStatus.initial,
+      startTime: DateTime.now(),
+      isIncoming: false,
+    );
+
+    Navigator.pushNamed(context, '/call', arguments: {
+      'call': call,
+      'receiver': receiver,
+      'isVideo': isVideo,
+      'isIncoming': false,
+    });
   }
 }
