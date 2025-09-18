@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../config/app_config.dart';
 import '../../utils/animation_utils.dart';
 import '../auth/login_screen.dart';
-import '../home/home_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -70,10 +69,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _completeOnboarding() {
-    // For demo mode, go directly to home screen with smooth animation
+    // Navigate to login screen after onboarding completion
     Navigator.of(context).pushReplacement(
       SmoothPageRoute(
-        page: const HomeScreen(),
+        page: const LoginScreen(),
         beginOffset: const Offset(0, 1),
         curve: AppAnimationCurves.pageEnter,
       ),
