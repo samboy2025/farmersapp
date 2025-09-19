@@ -91,14 +91,15 @@ class _StatusViewScreenState extends State<StatusViewScreen> {
     
     return Scaffold(
       backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTapDown: (_) => _togglePause(),
-        onTapUp: (_) => _togglePause(),
-        onPanEnd: (details) => _handleSwipeGesture(details),
-        child: Stack(
-          children: [
-            // Status content
-            PageView.builder(
+      body: SafeArea(
+        child: GestureDetector(
+          onTapDown: (_) => _togglePause(),
+          onTapUp: (_) => _togglePause(),
+          onPanEnd: (details) => _handleSwipeGesture(details),
+          child: Stack(
+            children: [
+              // Status content
+              PageView.builder(
               controller: _pageController,
               onPageChanged: (index) {
                 setState(() {
@@ -134,6 +135,7 @@ class _StatusViewScreenState extends State<StatusViewScreen> {
               _buildNavigationArea(context, isLeft: false),
             ],
           ],
+        ),
         ),
       ),
     );

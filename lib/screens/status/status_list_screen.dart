@@ -36,8 +36,9 @@ class _StatusListScreenState extends State<StatusListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppConfig.lightBackground,
-      body: BlocBuilder<StatusBloc, StatusState>(
-        builder: (context, state) {
+      body: SafeArea(
+        child: BlocBuilder<StatusBloc, StatusState>(
+          builder: (context, state) {
           if (state is StatusLoadInProgress) {
             return const Center(
               child: CircularProgressIndicator(
@@ -125,6 +126,7 @@ class _StatusListScreenState extends State<StatusListScreen> {
             ),
           );
         },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createNewStatus,

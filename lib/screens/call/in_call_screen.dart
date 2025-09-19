@@ -152,18 +152,19 @@ class _InCallScreenState extends State<InCallScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTap: widget.callType == CallType.video ? _showControls : null,
-        child: Stack(
-          children: [
-            // Main content
-            widget.callType == CallType.video
-                ? _buildVideoLayout()
-                : _buildVoiceLayout(),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: widget.callType == CallType.video ? _showControls : null,
+          child: Stack(
+            children: [
+              // Main content
+              widget.callType == CallType.video
+                  ? _buildVideoLayout()
+                  : _buildVoiceLayout(),
 
-            // Call duration timer (top)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 20,
+              // Call duration timer (top)
+              Positioned(
+                top: 20,
               left: 0,
               right: 0,
               child: Center(
@@ -293,6 +294,7 @@ class _InCallScreenState extends State<InCallScreen> with TickerProviderStateMix
                 ),
               ),
           ],
+        ),
         ),
       ),
     );

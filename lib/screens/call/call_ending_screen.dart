@@ -103,11 +103,12 @@ class _CallEndingScreenState extends State<CallEndingScreen>
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            fit: StackFit.expand,
-            children: [
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              fit: StackFit.expand,
+              children: [
               // Background
               Container(
                 decoration: const BoxDecoration(
@@ -244,6 +245,7 @@ class _CallEndingScreenState extends State<CallEndingScreen>
             ],
           );
         },
+        ),
       ),
     );
   }
