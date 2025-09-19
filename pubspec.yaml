@@ -55,7 +55,7 @@ dependencies:
   share_plus: ^7.2.1
   
   # Location & Permissions
-  location: ^8.0.1
+  location: ^6.0.2
   permission_handler: ^12.0.1
   
   # UI & UX
