@@ -7,7 +7,8 @@ plugins {
 
 android {
     namespace = "com.example.chat_app2"
-    compileSdk = flutter.compileSdkVersion
+    // Explicitly set to API 35 to satisfy plugin requirements
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
